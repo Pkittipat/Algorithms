@@ -7,7 +7,7 @@ import (
 
 type Queue struct {
 	Length int
-	Queue  []int
+	Queue  []*int
 	Head   int
 	Tail   int
 }
@@ -24,54 +24,57 @@ var (
 func NewQueue(length int) *Queue {
 	return &Queue{
 		Length: length,
-		Queue:  make([]int, length),
+		Queue:  make([]*int, length),
 		Head:   InitValue,
 		Tail:   InitValue,
 	}
 }
 
-// [6, 0, 0, 0, 0]
-// tail: -1, 0, 1, 2, 3, 4, 0
-// head: -1, 0, 1, 2, 3, 4, 0
-
 func (q *Queue) IsEmpty() bool {
-	fmt.Printf("tail %v head %v\n", q.Tail, q.Head)
 	return q.Tail == q.Head
 }
 
-func (q *Queue) IsFull() bool {
-	if q.Head == InitValue {
-		return false
+func (q *Queue) IsFull(tail int) bool {
+	if tail < q.Head {
+		return (q.Head-tail)%q.Length <= 0
 	}
-	return (q.Head - q.Tail) == 1
+	return (tail-q.Head)%q.Length <= 0
 }
 
 func (q *Queue) Enqueue(val int) error {
-	if q.IsFull() {
-		return ErrQueueIsFull
-	}
-	if q.Head == InitValue && q.Tail == InitValue {
-		q.Head += 1
-		q.Tail += 1
-	}
-	nextIndex := (q.Tail + 1) % q.Length
-	q.Queue[nextIndex] = val
-	if nextIndex == q.Head {
-		nextIndex -= 1
-	}
-	q.Tail = nextIndex
+	switch {
+	case q.Tail == -1:
+		q.Head = 0
+		q.Tail = 0
+		q.Queue[q.Tail] = &val
+	default:
+		buf := q.Tail + 1
+		buf %= q.Length
 
+		if q.IsFull(buf) {
+			return ErrQueueIsFull
+		}
+		q.Tail = buf
+		q.Queue[q.Tail] = &val
+	}
 	return nil
 }
 
 func (q *Queue) Dequeue() error {
-	if q.IsEmpty() {
-		q.Queue[q.Head] = 0
+	if q.Head == -1 {
 		return ErrQueueIsEmpty
 	}
-	nextIndex := (q.Head + 1) % q.Length
-	q.Queue[nextIndex] = 0
-	q.Head = nextIndex
+	if q.IsEmpty() {
+		if q.Queue[q.Head] == nil {
+			return ErrQueueIsEmpty
+		}
+		q.Queue[q.Head] = nil
+		return nil
+	}
+
+	q.Queue[q.Head] = nil
+	q.Head++
+	q.Head %= q.Length
 	return nil
 }
 

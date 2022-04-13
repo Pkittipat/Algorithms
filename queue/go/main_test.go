@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
@@ -12,10 +11,6 @@ const (
 	deQueueImpType impType = "dequeue"
 )
 
-// func (i impType) String() string {
-// 	return string(i)
-// }
-
 func TestQueue(t *testing.T) {
 	testCase := []struct {
 		name    string
@@ -23,12 +18,15 @@ func TestQueue(t *testing.T) {
 		impType impType
 		want    error
 	}{
+
+		{name: "Dequeue0ErrEmpty", value: 0, impType: deQueueImpType, want: ErrQueueIsEmpty},
+
 		{name: "Enqueue(1)", value: 1, impType: enQueueImpType, want: nil},
 		{name: "Enqueue(2)", value: 2, impType: enQueueImpType, want: nil},
 		{name: "Enqueue(3)", value: 3, impType: enQueueImpType, want: nil},
 		{name: "Enqueue(4)", value: 4, impType: enQueueImpType, want: nil},
 		{name: "Enqueue(5)", value: 5, impType: enQueueImpType, want: nil},
-		{name: "Enqueue(6)Err", value: 6, impType: enQueueImpType, want: ErrQueueIsFull},
+		{name: "Enqueue(6)ErrFull", value: 6, impType: enQueueImpType, want: ErrQueueIsFull},
 		{name: "Dequeue1", value: 0, impType: deQueueImpType, want: nil},
 		{name: "Enqueue(6)", value: 6, impType: enQueueImpType, want: nil},
 
@@ -37,7 +35,7 @@ func TestQueue(t *testing.T) {
 		{name: "Dequeue4", impType: deQueueImpType, want: nil},
 		{name: "Dequeue5", impType: deQueueImpType, want: nil},
 		{name: "Dequeue6", impType: deQueueImpType, want: nil},
-		{name: "Dequeue7", impType: deQueueImpType, want: ErrQueueIsEmpty},
+		{name: "Dequeue7ErrEmpty", impType: deQueueImpType, want: ErrQueueIsEmpty},
 	}
 
 	queue := NewQueue(5)
@@ -56,5 +54,4 @@ func TestQueue(t *testing.T) {
 			}
 		})
 	}
-	fmt.Println("Queue: ", queue.Queue)
 }
