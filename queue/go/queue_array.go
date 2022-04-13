@@ -4,7 +4,7 @@ import (
 	"errors"
 )
 
-type Queue struct {
+type QueueArray struct {
 	Length int
 	Queue  []*int
 	Head   int
@@ -20,8 +20,8 @@ var (
 	ErrQueueIsEmpty = errors.New("queue is empty")
 )
 
-func NewQueue(length int) *Queue {
-	return &Queue{
+func NewQueue(length int) *QueueArray {
+	return &QueueArray{
 		Length: length,
 		Queue:  make([]*int, length),
 		Head:   InitValue,
@@ -29,18 +29,18 @@ func NewQueue(length int) *Queue {
 	}
 }
 
-func (q *Queue) IsEmpty() bool {
+func (q *QueueArray) IsEmpty() bool {
 	return q.Tail == q.Head
 }
 
-func (q *Queue) IsFull(tail int) bool {
+func (q *QueueArray) IsFull(tail int) bool {
 	if tail < q.Head {
 		return (q.Head-tail)%q.Length <= 0
 	}
 	return (tail-q.Head)%q.Length <= 0
 }
 
-func (q *Queue) Enqueue(val int) error {
+func (q *QueueArray) Enqueue(val int) error {
 	switch {
 	case q.Tail == InitValue:
 		q.Head = 0
@@ -59,7 +59,7 @@ func (q *Queue) Enqueue(val int) error {
 	return nil
 }
 
-func (q *Queue) Dequeue() error {
+func (q *QueueArray) Dequeue() error {
 	if q.Head == InitValue {
 		return ErrQueueIsEmpty
 	}
