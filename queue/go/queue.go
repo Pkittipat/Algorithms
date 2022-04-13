@@ -1,8 +1,7 @@
-package main
+package queue
 
 import (
 	"errors"
-	"fmt"
 )
 
 type Queue struct {
@@ -43,7 +42,7 @@ func (q *Queue) IsFull(tail int) bool {
 
 func (q *Queue) Enqueue(val int) error {
 	switch {
-	case q.Tail == -1:
+	case q.Tail == InitValue:
 		q.Head = 0
 		q.Tail = 0
 		q.Queue[q.Tail] = &val
@@ -61,9 +60,10 @@ func (q *Queue) Enqueue(val int) error {
 }
 
 func (q *Queue) Dequeue() error {
-	if q.Head == -1 {
+	if q.Head == InitValue {
 		return ErrQueueIsEmpty
 	}
+
 	if q.IsEmpty() {
 		if q.Queue[q.Head] == nil {
 			return ErrQueueIsEmpty
@@ -76,24 +76,4 @@ func (q *Queue) Dequeue() error {
 	q.Head++
 	q.Head %= q.Length
 	return nil
-}
-
-func main() {
-	queue := NewQueue(5)
-	fmt.Println(queue.Queue)
-	testCase := []int{1, 2, 3, 4, 5, 6, 7, 8}
-	for _, v := range testCase {
-		if v == 3 {
-			err := queue.Dequeue()
-			if err != nil {
-				break
-			}
-		} else {
-			err := queue.Enqueue(v)
-			if err != nil {
-				break
-			}
-		}
-	}
-	fmt.Println(queue.Queue)
 }
