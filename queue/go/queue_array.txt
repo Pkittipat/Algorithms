@@ -1,0 +1,101 @@
+Queue with Array
+================
+
+[[ Algorithm ]]
+---
+Tail: Index of last element. Start with -1 value.
+Head: Index if first element that will delete. Start with -1 value.
+
+Step1:
+- queue: [<nil>, <nil>, <nil>, <nil>, <nil>]
+- Tail: -1
+- Head: -1
+
+Step2: enqueue value = 1
+- queue: [1, <nil>, <nil>, <nil>, <nil>]
+- Tail: 0
+- Head: 0
+
+Step3: enqueue value = 2
+- queue: [1, 2, <nil>, <nil>, <nil>]
+- Tail: 1
+- Head: 0
+
+Step4: enqueue value = 3
+- queue: [1, 2, 3, <nil>, <nil>]
+- Tail: 2
+- Head: 0
+
+Step4: enqueue value = 4
+- queue: [1, 2, 3, 4, <nil>]
+- Tail: 3
+- Head: 0
+
+Step5: enqueue value = 5
+- queue: [1, 2, 3, 4, 5]
+- Tail: 4
+- Head: 0
+
+Step5: enqueue value = 5
+- queue: [1, 2, 3, 4, 5]
+- Tail: 4
+- Head: 0
+
+Step6: dequeue
+- queue: [0, 2, 3, 4, 5]
+- Tail: 4
+- Head: 0
+
+Step7: enqueue value = 6
+- queue: [6, 2, 3, 4, 5]
+- Tail: 0
+- Head: 1
+---
+
+[[psudo code]]
+---
+initValue = -1
+queue = [0, 0, 0, 0, 0] // assume lenght equal 5.
+tail = initValue
+head = initValue
+
+IsFull(tailBuf) bool:
+    if tail < head:
+        return (head - tailBuf) % len(queue) <= 0
+
+    return (tail - head) % len(queue) <= 0
+
+IsEmpty() bool:
+    return tail == head
+
+Enqueue(val):
+    if tail == initValue:
+        tail, head = 0, 0
+        queue[tail] = val
+        return
+    else:
+        buf = tail + 1
+        buf %= len(queue)
+        
+        if queue.IsFull(buf):
+            return ErrQueueIsFull
+        tail = buf
+        queue[tail] = val
+    return
+
+Dequeue():
+    if head == initValue:
+        return ErrQueueIsEmpty
+    
+    if IsEmpty():
+        if queue[head] is nil:
+            return ErrQueueIsEmpty
+        queue[head] = nil
+        return
+    
+    queue[head] = nil
+    head++
+    head %= len(queue)
+    reutrn 
+
+---
