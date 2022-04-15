@@ -34,10 +34,7 @@ func (q *QueueArray) IsEmpty() bool {
 }
 
 func (q *QueueArray) IsFull(tail int) bool {
-	if tail < q.Head {
-		return (q.Head-tail)%q.Length <= 0
-	}
-	return (tail-q.Head)%q.Length <= 0
+	return (q.Tail+1)%q.Length == q.Head
 }
 
 func (q *QueueArray) Enqueue(val int) error {
