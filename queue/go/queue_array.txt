@@ -60,10 +60,7 @@ tail = initValue
 head = initValue
 
 IsFull(tailBuf) bool:
-    if tail < head:
-        return (head - tailBuf) % len(queue) <= 0
-
-    return (tail - head) % len(queue) <= 0
+    return (tail + 1) % len(queue) == head
 
 IsEmpty() bool:
     return tail == head
